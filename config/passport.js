@@ -15,10 +15,6 @@ passport.deserializeUser((req, user, done) => {
   }else{
     //todo put error here
   }
- /* User.findById(id, (err, user) => {
-    done(err, user);
-  });
-  */
 });
 
 /**

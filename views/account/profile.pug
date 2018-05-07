@@ -34,9 +34,18 @@ block content
               button.btn.btn.btn-primary(onClick="return updateProfile()", type="button")
                 i.fas.fa-pencil-alt.fa-sm
                 | Update Profile
+    .alert.alert-success.fade.in
+        button.close(type='button', data-dismiss='alert')
+          i.far.fa-times-circle
+        div(id="successmessage")
+    
+    .alert.alert-danger.fade.in()
+        button.close(type='button', data-dismiss='alert')
+          i.far.fa-times-circle
+        div(id="errormessage")
 
   script.
-
     document.addEventListener("DOMContentLoaded", function(event) {
+          $('.alert').hide();
             getProfile('#{user.addressId}');
     });
