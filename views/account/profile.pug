@@ -1,0 +1,42 @@
+extends ../layout
+
+block content
+  .page-header
+    h3 Profile Information
+  form.form-horizontal(id='profileInfo')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group
+      label.col-sm-3.control-label(for='addressId') Id
+      .col-sm-7
+        input.form-control(type='text', name='addressId', id='addressId', value=user.addressId, readonly)
+    .form-group
+      label.col-sm-3.control-label(for='balance') Balance
+      .col-sm-7
+        input.form-control(type='text', name='balance', id='balance', value=user.balance + ' NAS', readonly)
+    .form-group
+            label.col-sm-3.control-label(for='name') Name
+            .col-sm-7
+              input.form-control(type='text', name='name', id='name', value=user.profile.name)
+    .form-group
+            label.col-sm-3.control-label(for='location') Location
+            .col-sm-7
+              input.form-control(type='text', name='location', id='location', value=user.profile.location)
+    .form-group
+            label.col-sm-3.control-label(for='website') Website
+            .col-sm-7
+              input.form-control(type='text', name='website', id='website', value=user.profile.website)
+    .form-group
+            label.col-sm-3.control-label Avatar
+            .col-sm-4
+              img(src=user.profile.picture, class='profile', width='100', height='100')
+    .form-group
+            .col-sm-offset-3.col-sm-4
+              button.btn.btn.btn-primary(onClick="return updateProfile()", type="button")
+                i.fas.fa-pencil-alt.fa-sm
+                | Update Profile
+
+  script.
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+            getProfile('#{user.addressId}');
+    });
