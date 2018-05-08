@@ -30,8 +30,9 @@ passport.use(new LocalStrategy({ usernameField: 'jsoncontents', passwordField: '
      
      var Neb = Nas.Neb;
      var neb = new Neb();
+     //process.env.SESSION_SECRET,
      //todo put network in configuration
-     neb.setRequest(new Nas.HttpRequest("https://testnet.nebulas.io"));
+     neb.setRequest(new Nas.HttpRequest(process.env.NAS_NETWORK_ENDPOINT));
      neb.api.getAccountState(id)
      .then(function (resp) {
          if (resp.error) {
@@ -42,6 +43,7 @@ passport.use(new LocalStrategy({ usernameField: 'jsoncontents', passwordField: '
            user.balance = Nas.Unit.fromBasic(Nas.Utils.toBigNumber(resp.balance), "nas").toNumber();
            user.key = key;
            user.profile.picture = '/images/logo2.png'
+           user.nonce = parseInt(resp.nonce || 0) + 1
            return done(null, user);
          }
      })

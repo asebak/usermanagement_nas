@@ -115,3 +115,45 @@ exports.getAccount = (req, res) => {
   });
 };
 
+exports.postUpdateProfile = (req, res, next) => { 
+    var updateProfileContract = "n1wkefRnGXPJHU9RCiHTMDct6Uo51DuQjVo";
+    var neb = new Nas.Neb();
+    neb.setRequest(new Nas.HttpRequest(process.env.NAS_NETWORK_ENDPOINT));
+
+    var name = req.body.name || '';
+    var location = req.body.location || '';
+    var website = req.body.website || '';
+    var picture = req.body.picture || '';
+    
+
+
+    var fromAddress = req.user.addressId;
+    var toAddress = updateProfileContract;
+    var balance = req.user.balance;
+    var chainId = parseInt(process.env.NAS_NETWORK_CHAINID);
+    var amount = "0"
+    var gaslimit = "200000";
+    var gasprice = "1000000";
+    var nonce = req.user.nonce;
+
+    var callArgs = "[\"" + name + "\", \"" + location + "\", \"" + website + "\", \"" + picture + "\"]";
+
+    var contract = {function: "save", args: callArgs}
+
+     var acc = Nas.Account.fromAddress(fromAddress);
+     
+     acc = acc.fromKey(req.user.key, "ahmad");
+
+     var gTx = new Nas.Transaction(chainId, acc, toAddress, 
+      Nas.Unit.nasToBasic(Nas.Utils.toBigNumber(amount)), parseInt(nonce), gasprice, gaslimit, contract);
+
+     gTx.signTransaction();
+     gTx && neb.api.sendRawTransaction(gTx.toProtoString())
+     .then(function (resp) {
+         req.flash('success', { msg: 'Profile information has been updated. TX: ' + resp.txhash });
+         res.redirect('/account');
+     }).catch(function (o) {
+      req.flash('errors', { msg: 'Profile information could not be updated.' });
+      res.redirect('/account');
+     });
+  };

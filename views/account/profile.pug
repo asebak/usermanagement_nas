@@ -3,7 +3,7 @@ extends ../layout
 block content
   .page-header
     h3 Profile Information
-  form.form-horizontal(id='profileInfo')
+  form.form-horizontal(id='profileInfo', action='/account/profile', method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
     .form-group
       label.col-sm-3.control-label(for='addressId') Id
@@ -29,9 +29,12 @@ block content
             label.col-sm-3.control-label Avatar
             .col-sm-4
               img(src=user.profile.picture, class='profile', width='100', height='100')
+              .col-sm-4
+              input.form-control(type='file', name='keystore',enctype="multipart/form-data", id='filepicture',accept="image/*")
+
     .form-group
             .col-sm-offset-3.col-sm-4
-              button.btn.btn.btn-primary(onClick="return updateProfile()", type="button")
+              button.btn.btn.btn-primary( type="submit")
                 i.fas.fa-pencil-alt.fa-sm
                 | Update Profile
     .alert.alert-success.fade.in
@@ -45,7 +48,7 @@ block content
         div(id="errormessage")
 
   script.
-    document.addEventListener("DOMContentLoaded", function(event) {
-          $('.alert').hide();
-            getProfile('#{user.addressId}');
-    });
+    //document.addEventListener("DOMContentLoaded", function(event) {
+   //       $('.alert').hide();
+     //       getProfile('#{user.addressId}');
+    //});
