@@ -20,11 +20,10 @@ block content
               i.fas.fa-user-plus.fa-sm
               | Sign Up
   else
-    h3 Account created successfully
-      .form-group
-          label.col-sm-3.control-label Account Id
-          .col-sm-7
-             label.col-sm-3.control-label #{address}
-      .form-group
-             button.btn.btn-warning(onClick="javascript:saveAs(new Blob(['" + key + "'], { type: 'application/json; charset=utf-8' }), '"+ address +"')") Download Keystore
 
+          h4(class="modal-title") Account created successfully
+          br
+          button.btn.btn-warning(onClick="javascript:saveAs(new Blob(['" + key + "'], { type: 'application/json; charset=utf-8' }), '"+ address +"')") Download Keystore
+          br
+          br
+          p You will need this file and your password to login.

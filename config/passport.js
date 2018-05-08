@@ -3,6 +3,7 @@ const request = require('request');
 const User = require('../models/User');
 const Nas = require('nebulas');
 const { Strategy: LocalStrategy } = require('passport-local');
+const NebInvoke = require('../smartcontracts/invoke');
 
 passport.serializeUser((user, done) => {
   done(null, user);
@@ -40,11 +41,31 @@ passport.use(new LocalStrategy({ usernameField: 'jsoncontents', passwordField: '
          } else {
            var user = new User();
            user.addressId = id;
+           user.profile.name = id;
            user.balance = Nas.Unit.fromBasic(Nas.Utils.toBigNumber(resp.balance), "nas").toNumber();
            user.key = key;
            user.profile.picture = '/images/logo2.png'
            user.nonce = parseInt(resp.nonce || 0) + 1
+           var toAddress = process.env.NAS_CONTRACT_ID;
+           var amount = "0"
+           var callArgs = "[\"" + id + "\"]";   
+
+           var nebInvoke = new NebInvoke(toAddress, id, acc);
+           nebInvoke.rpcCall("get", callArgs, amount, function(response){
+             if(response.result != null && response.result != "null"){
+               var obj = JSON.parse(response.result);
+              user.profile.name = obj.name;
+              user.profile.website = obj.website;
+              user.profile.location = obj.location;
+              user.profile.picture = obj.avatar;
+             }
            return done(null, user);
+          }, function(error){
+            return done(error); 
+           });
+         
+
+           //return done(null, user);
          }
      })
      .catch(function (e) {

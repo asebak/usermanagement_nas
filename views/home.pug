@@ -3,3 +3,6 @@ extends layout
 block content
   h1 User management Sample
   p.lead A simple application to have the ability to create, login, update profiles, and keep sessions.
+  label.control-label() Network: #{env.endpoint}
+  br
+  label.control-label() Chain ID: #{env.chain}

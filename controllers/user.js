@@ -6,7 +6,7 @@ const User = require('../models/User');
 const Nas = require('nebulas');
 const fs = require('fs')
 const randomBytesAsync = promisify(crypto.randomBytes);
-
+const NebInvoke = require('../smartcontracts/invoke');
 /**
  * GET /login
  * Login page.
@@ -116,29 +116,53 @@ exports.getAccount = (req, res) => {
 };
 
 exports.postUpdateProfile = (req, res, next) => { 
-    var updateProfileContract = "n1wkefRnGXPJHU9RCiHTMDct6Uo51DuQjVo";
-    var neb = new Nas.Neb();
+  try {
+    
+  
+  var name = req.body.name || '';
+  var location = req.body.location || '';
+  var website = req.body.website || '';
+  var picture = req.body.picturebytes || '';
+  var fromAddress = req.user.addressId;
+  var toAddress = process.env.NAS_CONTRACT_ID;
+  var balance = req.user.balance;
+  var amount = "0"
+  var acc = Nas.Account.fromAddress(fromAddress); 
+  var callArgs = "[\"" + name + "\", \"" + location + "\", \"" + website + "\", \"" + picture + "\"]";   
+  acc = acc.fromKey(req.user.key, req.body.password); 
+  var nebInvoke = new NebInvoke(toAddress, fromAddress, acc);
+  nebInvoke.txCall("save", callArgs, amount, function(response){
+      req.user.profile.name = name
+      req.user.profile.website = website;
+      req.user.profile.location = location
+      req.user.profile.picture = picture
+      req.flash('success', { msg: 'Profile information has been updated. TX Hash: ' + response.txhash });
+    res.redirect('/account');
+
+
+   // req.flash('success', { msg: 'Profile information has been updated. It might take a few seconds to reflect. TX Hash: ' + response.txhash });
+   // res.redirect('/account');
+  }, function(error){
+    req.flash('errors', { msg: 'Profile could not be updated: ' + error.message });
+    res.redirect('/account');
+  });
+} catch (error) {
+  req.flash('errors', { msg: error.message });
+  res.redirect('/account');
+}
+    /*var neb = new Nas.Neb();
     neb.setRequest(new Nas.HttpRequest(process.env.NAS_NETWORK_ENDPOINT));
 
-    var name = req.body.name || '';
-    var location = req.body.location || '';
-    var website = req.body.website || '';
-    var picture = req.body.picture || '';
-    
 
 
-    var fromAddress = req.user.addressId;
-    var toAddress = updateProfileContract;
-    var balance = req.user.balance;
-    var chainId = parseInt(process.env.NAS_NETWORK_CHAINID);
-    var amount = "0"
-    var gaslimit = "200000";
-    var gasprice = "1000000";
-    var nonce = req.user.nonce;
 
-    var callArgs = "[\"" + name + "\", \"" + location + "\", \"" + website + "\", \"" + picture + "\"]";
 
-    var contract = {function: "save", args: callArgs}
+
+
+    var callArgs = "[\"" + fromAddress + "\"]";
+
+
+    var contract = {function: "get", args: callArgs}
 
      var acc = Nas.Account.fromAddress(fromAddress);
      
@@ -152,8 +176,9 @@ exports.postUpdateProfile = (req, res, next) => {
      .then(function (resp) {
          req.flash('success', { msg: 'Profile information has been updated. TX: ' + resp.txhash });
          res.redirect('/account');
-     }).catch(function (o) {
+     })
+     .catch(function (o) {
       req.flash('errors', { msg: 'Profile information could not be updated.' });
       res.redirect('/account');
-     });
+     });*/
   };

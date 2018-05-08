@@ -27,28 +27,26 @@ block content
               input.form-control(type='text', name='website', id='website', value=user.profile.website)
     .form-group
             label.col-sm-3.control-label Avatar
-            .col-sm-4
-              img(src=user.profile.picture, class='profile', width='100', height='100')
-              .col-sm-4
-              input.form-control(type='file', name='keystore',enctype="multipart/form-data", id='filepicture',accept="image/*")
+            .col-sm-7
+                .col-sm-1
+                  img(id="imgcontrol", src=user.profile.picture, class='profile', width='50', height='50')
+                .col-sm-6
+                  input.form-control(type='file', name='picture',enctype="multipart/form-data", onchange="onFileChange(this)", id='picture',accept="image/*")
+                  input.form-control(type='hidden', name='picturebytes', id='picturebytes', value=user.profile.picture)
 
     .form-group
             .col-sm-offset-3.col-sm-4
-              button.btn.btn.btn-primary( type="submit")
-                i.fas.fa-pencil-alt.fa-sm
-                | Update Profile
-    .alert.alert-success.fade.in
-        button.close(type='button', data-dismiss='alert')
-          i.far.fa-times-circle
-        div(id="successmessage")
-    
-    .alert.alert-danger.fade.in()
-        button.close(type='button', data-dismiss='alert')
-          i.far.fa-times-circle
-        div(id="errormessage")
+             a(data-toggle="modal" href="#passwordModal" class="btn btn-primary") Update
+
+    include ../partials/passwordconfirm
 
   script.
-    //document.addEventListener("DOMContentLoaded", function(event) {
-   //       $('.alert').hide();
-     //       getProfile('#{user.addressId}');
-    //});
+    document.addEventListener("DOMContentLoaded", function(event) {
+        //document.getElementById('imgcontrol')
+   // .setAttribute(
+    //    'src', '#{user.profile.picture}'
+    //);
+      });
+          //$('.alert').hide();
+           // getProfile('#{user.addressId}');
+    

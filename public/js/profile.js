@@ -1,4 +1,4 @@
-var NebPay = require("nebpay");     //https://github.com/nebulasio/nebPay
+/*var NebPay = require("nebpay");     //https://github.com/nebulasio/nebPay
 var nebPay = new NebPay();
 var dappAddress = 'n1wkefRnGXPJHU9RCiHTMDct6Uo51DuQjVo';
 
@@ -52,7 +52,24 @@ function updateProfile(){
 
 
 }
-
+*/
+function onFileChange(e) {
+    var file = e.files[0];
+    var reader = new FileReader();
+    if(file){
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+        //var compressed = LZString.compress(reader.result);
+        //avatar = compressed;
+        $("#picturebytes").val(reader.result);
+    };
+    reader.onerror = function (error) {
+        console.log(err);
+        //save();
+    };
+}
+}
+/*
 function cbSearch(resp) {
     var result = resp.result
     console.log("return of rpc call: " + JSON.stringify(result))
@@ -75,4 +92,4 @@ function cbSearch(resp) {
     }
 }
 
-  
+  */
