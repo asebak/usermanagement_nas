@@ -50,7 +50,7 @@ passport.use(new LocalStrategy({ usernameField: 'jsoncontents', passwordField: '
            var amount = "0"
            var callArgs = "[\"" + id + "\"]";   
 
-           var nebInvoke = new NebInvoke(toAddress, id, acc);
+           var nebInvoke = new NebInvoke(toAddress, id, id);
            nebInvoke.rpcCall("get", callArgs, amount, function(response){
              if(response.result != null && response.result != "null"){
                var obj = JSON.parse(response.result);
